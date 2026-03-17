@@ -1,0 +1,48 @@
+### Phase 4: Marketplace Features (Reviews, Search, Payments & Stats)
+
+@base_url = http://127.0.0.1:8000
+@student_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTgxNTUyLCJpYXQiOjE3NzM1Nzc5NTIsImp0aSI6ImFjMWM0NTA1MjVhNDRlOTRiOWQzNzIwNmEwYjZiZGM0IiwidXNlcl9pZCI6IjgifQ.LF4jp-2JQDMesjU2HPYEoBihflrgFKGG6O6jprFhnSE
+@instructor_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTgxNTgzLCJpYXQiOjE3NzM1Nzc5ODMsImp0aSI6IjQ1ZTdlYzI0MjhlYTQxNmU4YTEyMmY3MGNiNWY3MDFhIiwidXNlcl9pZCI6IjEifQ.xh6xMrLJYhAcdgzGYAyNoa_7x7JONtBuDi9ga3m6Enw
+
+### 1. Review & Rating System
+# Goal: Ensure only enrolled students can review the course
+# Note: Replace STUDENT_TOKEN with a valid token for an enrolled student.
+POST {{base_url}}/api/courses/4/reviews/
+Authorization: Bearer {{student_token}}
+Content-Type: application/json
+
+{
+    "rating": 5,
+    "comment": "This course is amazing! Highly recommended."
+}
+
+### 2. Advanced Search & Filtering
+# Goal: Test search by category and price range
+GET {{base_url}}/api/public/courses/?category=Programming&min_price=50
+Accept: application/json
+
+### 3. Stripe Checkout (Simulated)
+# Goal: Create a checkout session (returns a URL)
+POST {{base_url}}/api/payments/create-checkout-session/
+Authorization: Bearer {{student_token}}
+Content-Type: application/json
+
+{
+    "course_id": 1
+}
+
+### 4. Stripe Webhook (Local Simulation)
+# Goal: Simulate payment success to trigger automated enrollment
+# NOTE: Run this in terminal: stripe trigger checkout.session.completed
+# Or use tool: stripe trigger checkout.session.completed
+
+### 5. Course Stats & Dashboard
+# Goal: Verify average rating and total enrollments
+GET {{base_url}}/api/public/courses/4/
+Accept: application/json
+
+### 6. Instructor Revenue API
+# Goal: Instructor viewing course revenue
+GET {{base_url}}/api/courses/4/revenue/
+Authorization: Bearer {{instructor_token}}
+Accept: application/json

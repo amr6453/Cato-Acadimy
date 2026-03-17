@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Outfit', 'Inter', system-ui, sans-serif;
+  
+  --color-primary: #a435f0;
+  --color-primary-hover: #9327e0;
+  --color-primary-glow: rgba(164, 53, 240, 0.2);
+  
+  --color-dark-bg: #0d0d12;
+  --color-dark-card: #1a1a24;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+  --color-dark-muted: rgba(255, 255, 255, 0.4);
+  
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-slate-200 dark:border-dark-border outline-none;
+    box-sizing: border-box;
+  }
+  
+  body {
+    @apply bg-white dark:bg-dark-bg text-slate-900 dark:text-white font-sans antialiased;
+    line-height: 1.6;
+  }
+  
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  .premium-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  
+  .purple-glow {
+    box-shadow: 0 0 15px var(--color-primary-glow);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-white/10 rounded-full border-2 border-transparent bg-clip-content;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-white/20;
+}

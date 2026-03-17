@@ -1,0 +1,35 @@
+@baseUrl = http://127.0.0.1:8000/api
+@studentToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNDQ5NzMwLCJpYXQiOjE3NzM0NDYxMzAsImp0aSI6IjU3OTYxODhiNWUwYjRlOWVhMzk4MmVmODRiNjVjMmIwIiwidXNlcl9pZCI6IjgifQ.4qM61P0E5f1Vl6f53rykLpPY27upDmVa5rgCUHxNB5A
+@otherToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNDQ5MDc2LCJpYXQiOjE3NzM0NDU0NzYsImp0aSI6IjE4MmE5YjA2YTQ2YTRkNjE5ZjRiZWExN2M0YWEzZDkxIiwidXNlcl9pZCI6IjYifQ.QTO5ADBx2c3djIffwUEd7pcmmJii7YZNqLCfopYeA84
+@courseId = 4
+@lessonId = 5
+
+### 1. Student Enrollment
+# To enroll a student in a course.
+POST {{baseUrl}}/enroll/
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+    "course": {{courseId}}
+}
+
+### 2. Access Denied Test (Unauthorized User)
+# This should return 403 Forbidden.
+GET {{baseUrl}}/lessons/{{lessonId}}/
+Authorization: Bearer {{otherToken}}
+
+### 3. Access Allowed Test (Enrolled Student)
+# This should return 200 OK.
+GET {{baseUrl}}/lessons/{{lessonId}}/
+Authorization: Bearer {{studentToken}}
+
+### 4. Mark Lesson as Complete
+# This marks a lesson as finished and triggers a progress update for the course.
+POST {{baseUrl}}/lessons/{{lessonId}}/complete/
+Authorization: Bearer {{studentToken}}
+
+### 5. Check Enrolled Courses & Progress
+# View all enrolled courses and their completion percentages.
+GET {{baseUrl}}/my-courses/
+Authorization: Bearer {{studentToken}}

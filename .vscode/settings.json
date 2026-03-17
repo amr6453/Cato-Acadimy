@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": "d:\\prj\\Auth-with-http\\env\\Scripts\\python.exe",
+    "python.analysis.extraPaths": [
+        ".",
+        "d:\\prj\\Auth-with-http\\env\\Lib\\site-packages"
+    ],
+    "python.analysis.autoSearchPaths": true
+}
