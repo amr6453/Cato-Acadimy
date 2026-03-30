@@ -3,6 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { Link } from 'react-router-dom';
+import SEO from '../components/common/SEO';
 
 const StatCard = ({ icon: Icon, label, value, colorClass }) => (
   <Card hover padding="p-6" className="flex flex-col gap-4 group">
@@ -10,7 +11,7 @@ const StatCard = ({ icon: Icon, label, value, colorClass }) => (
       <Icon size={24} className={colorClass.replace('bg-', 'text-')} />
     </div>
     <div>
-      <div className="text-3xl font-black text-slate-900 tracking-tight">
+      <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
         {value}
       </div>
       <div className="text-[13px] text-slate-500 font-bold uppercase tracking-wider">
@@ -26,6 +27,10 @@ const HomePage = () => {
 
   return (
     <div className="animate-fade-in space-y-10">
+      <SEO
+        title="Home"
+        description="Master your future today with Cato Academy. Access world-class courses and grow your career without limits."
+      />
       {/* ── Hero Banner ── */}
       <div className="relative overflow-hidden rounded-[32px] bg-white dark:bg-dark-bg p-10 sm:p-16 premium-shadow border border-slate-100 dark:border-white/5 transition-colors duration-300">
         {/* Simplified Background Gradients */}
@@ -76,7 +81,7 @@ const HomePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2" padding="p-10">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Account Information</h2>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Account Information</h2>
             <Button variant="ghost" size="sm">Edit Profile</Button>
           </div>
           

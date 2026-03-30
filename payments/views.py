@@ -16,6 +16,7 @@ class CreateCheckoutSessionView(APIView):
     Creates a Stripe Checkout Session for course purchase.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = 'payment'
 
     def post(self, request, *args, **kwargs):
         course_id = request.data.get('course_id')
