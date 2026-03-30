@@ -171,7 +171,7 @@ const LearningPage = () => {
                                     activeLesson.hls_playlist || activeLesson.video_file ? (
                                         <VideoPlayer 
                                             src={activeLesson.hls_playlist 
-                                                ? `http://127.0.0.1:8000/media/${activeLesson.hls_playlist}`
+                                                ? `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/media/${activeLesson.hls_playlist}`
                                                 : activeLesson.video_file}
                                             onEnded={handleLessonComplete}
                                             lessonId={activeLesson.id}

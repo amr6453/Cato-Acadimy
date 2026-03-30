@@ -21,6 +21,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import CurriculumAccordion from '../components/courses/CurriculumAccordion';
 import ReviewSection from '../components/course/ReviewSection';
+import SEO from '../components/common/SEO';
 
 const CourseDetailPage = () => {
     const { isAuthenticated } = useAuthStore();
@@ -99,6 +100,11 @@ const CourseDetailPage = () => {
       exit={{ opacity: 0, y: -20 }}
       className="pb-20"
     >
+      <SEO
+        title={course?.title || 'Course Details'}
+        description={course?.description || 'Learn more about this course on Cato Academy.'}
+        ogImage={course?.thumbnail}
+      />
       {/* -- Header Section -- */}
       <div className="relative rounded-[40px] bg-white dark:bg-dark-bg p-8 sm:p-16 overflow-hidden mb-12 premium-shadow border border-slate-100 dark:border-white/5 transition-colors duration-300">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/10 blur-[120px]" />

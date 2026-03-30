@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .models import CustomUser, Profile
 from .serializers import UserSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from .utils import set_auth_cookies, clear_auth_cookies
 
 # Create your views here.
 
@@ -28,34 +29,20 @@ class ProfileUpdateView(UpdateAPIView):
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
+    throttle_scope = 'auth'
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            access_token = response.data.get('access')
-            refresh_token = response.data.get('refresh')
-
-            response.set_cookie(
-                key=settings.AUTH_COOKIE_ACCESS,
-                value=access_token,
-                max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-                path=settings.AUTH_COOKIE_PATH,
-            )
-            response.set_cookie(
-                key=settings.AUTH_COOKIE_REFRESH,
-                value=refresh_token,
-                max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(),
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-                path=settings.AUTH_COOKIE_PATH,
+            set_auth_cookies(
+                response,
+                access_token=response.data.get('access'),
+                refresh_token=response.data.get('refresh')
             )
         return response
 
 
 class CookieTokenRefreshView(TokenRefreshView):
+    throttle_scope = 'auth'
     def post(self, request, *args, **kwargs):
         refresh_token = request.COOKIES.get(settings.AUTH_COOKIE_REFRESH)
         if refresh_token:
@@ -64,15 +51,9 @@ class CookieTokenRefreshView(TokenRefreshView):
         response = super().post(request, *args, **kwargs)
         
         if response.status_code == 200:
-            access_token = response.data.get('access')
-            response.set_cookie(
-                key=settings.AUTH_COOKIE_ACCESS,
-                value=access_token,
-                max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),
-                secure=settings.AUTH_COOKIE_SECURE,
-                httponly=settings.AUTH_COOKIE_HTTP_ONLY,
-                samesite=settings.AUTH_COOKIE_SAMESITE,
-                path=settings.AUTH_COOKIE_PATH,
+            set_auth_cookies(
+                response,
+                access_token=response.data.get('access')
             )
         return response
 
@@ -82,6 +63,5 @@ class LogoutView(APIView):
 
     def post(self, request, *args, **kwargs):
         response = Response({"detail": "Logged out successfully"}, status=status.HTTP_200_OK)
-        response.delete_cookie(settings.AUTH_COOKIE_ACCESS)
-        response.delete_cookie(settings.AUTH_COOKIE_REFRESH)
+        clear_auth_cookies(response)
         return response

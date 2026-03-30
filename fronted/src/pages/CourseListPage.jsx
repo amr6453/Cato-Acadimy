@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, BookOpen, AlertCircle } from 'lucide-react';
 import CourseCard from '../components/courses/CourseCard';
 import CourseFilters from '../components/courses/CourseFilters';
 import Button from '../components/ui/Button';
+import SEO from '../components/common/SEO';
 
 const CourseListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,7 +30,7 @@ const CourseListPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/categories/');
+      const response = await api.get('/api/categories/');
       setCategories(response.data);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
@@ -40,7 +41,7 @@ const CourseListPage = () => {
     setLoading(true);
     setError(null);
     try {
-      let url = 'http://127.0.0.1:8000/api/public/courses/';
+      let url = '/api/public/courses/';
       const params = new URLSearchParams();
 
       if (selectedCategory !== 'all') {
@@ -63,7 +64,7 @@ const CourseListPage = () => {
         params.append('min_price', '100');
       }
 
-      const response = await axios.get(`${url}?${params.toString()}`);
+      const response = await api.get(`${url}?${params.toString()}`);
       setCourses(response.data);
     } catch (err) {
       setError('Failed to load courses. Please try again later.');
@@ -95,6 +96,10 @@ const CourseListPage = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-10">
+      <SEO
+        title="Courses"
+        description="Browse our extensive catalog of courses and start learning new skills today."
+      />
       {/* -- Sidebar -- */}
       <aside className="w-full lg:w-72 flex-shrink-0">
         <CourseFilters 
@@ -139,7 +144,10 @@ const CourseListPage = () => {
             <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
             <h3 className="text-xl font-black text-red-900 dark:text-red-500 mb-2">Oops! Something went wrong</h3>
             <p className="text-red-700/60 dark:text-red-400 font-medium mb-6">{error}</p>
-            <Button variant="primary" onClick={fetchCourses}>Try Again</Button>
+        <Button variant="primary" onClick={() => {
+          import('react-hot-toast').then(t => t.default.error('Retrying...'));
+          fetchCourses();
+        }}>Try Again</Button>
           </div>
         ) : courses.length === 0 ? (
           <div className="py-20 text-center">
