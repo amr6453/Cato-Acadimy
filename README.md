@@ -1,4 +1,14 @@
-﻿# Cato-Acadimy
+---
+title: CatoLern
+emoji: 🎓
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
+# Cato-Acadimy
 
 أهلاً بيك في مشروع Cato Academy! ده دليل سريع عشان تعرف تشغل الموقع عندك على الجهاز خطوة بخطوة.
 
@@ -46,9 +56,9 @@
 
 ## 🎨 إزاي تشغل الفرونت إند (Frontend - React/Vite)
 
-1. **افتح تيرمينال جديد** وادخل على فولدر `fronted`.
+1. **افتح تيرمينال جديد** وادخل على فولدر `frontend`.
    ```bash
-   cd fronted
+   cd frontend
    ```
 2. **نزل كل الـ Packages المطلوبة**:
    ```bash

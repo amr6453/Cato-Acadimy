@@ -1,0 +1,13 @@
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+backup_local/
+fronted/
+frontend/node_modules/
+.git/
+.vscode/
+.idea/
+SESSION_LOG.md
