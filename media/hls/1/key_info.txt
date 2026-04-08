@@ -1,2 +1,0 @@
-http://127.0.0.1:8000/api/video-key/1/
-D:\prj\Auth-with-http\lern\media\hls\1\video.key
