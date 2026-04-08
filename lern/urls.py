@@ -43,7 +43,8 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # أي رابط مش API حيروح للـ Frontend
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
+    # أي رابط مش API ومش ملفات Static حيروح للـ Frontend
+    re_path(r'^(?!api/|admin/|auth/|static/|assets/|silk/|media/).*$', TemplateView.as_view(template_name='index.html')),
 ]
 
 if settings.DEBUG:

@@ -1,4 +1,14 @@
-# Using a single stage Python build since frontend is pre-built locally
+# Stage 1: Build Frontend
+FROM node:20-slim AS frontend-build
+WORKDIR /app/frontend
+# Install dependencies separately for caching
+COPY frontend/package*.json ./
+RUN npm install
+# Copy frontend source and build
+COPY frontend/ ./
+RUN npm run build
+
+# Stage 2: Final Python Image
 FROM python:3.11-slim
 WORKDIR /app
 
@@ -19,8 +29,11 @@ RUN python -m pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn whitenoise
 
-# Copy everything (includes pre-built frontend/dist and staticfiles)
+# Copy project files
 COPY . .
+
+# Copy built frontend from Stage 1
+COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -31,7 +44,7 @@ ENV CELERY_BROKER_URL="memory://"
 ENV CELERY_RESULT_BACKEND="rpc://"
 ENV PYTHONPATH=/app
 
-# Ensure collectstatic finds the existing files (fast)
+# Ensure collectstatic finds the built frontend files
 RUN python manage.py collectstatic --noinput
 
 # Give permissions
@@ -40,6 +53,5 @@ RUN chmod -R 777 /app
 # Expose port 7860
 EXPOSE 7860
 
-# Start command using shell form to ensure environment variables like $PORT are expanded
-# and to allow running multiple commands (migrate + gunicorn)
-CMD ["sh", "-c", "python manage.py migrate && python manage.py reset_all_passwords && gunicorn lern.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --access-logfile - --error-logfile -"]
+# Start command: migrate + create superuser (if not exists) + reset passwords + gunicorn
+CMD ["sh", "-c", "python manage.py migrate && echo \"from users.models import CustomUser; CustomUser.objects.create_superuser('admin@example.com', 'Admin@123') if not CustomUser.objects.filter(email='admin@example.com').exists() else None\" | python manage.py shell && python manage.py reset_all_passwords && gunicorn lern.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --access-logfile - --error-logfile -"]

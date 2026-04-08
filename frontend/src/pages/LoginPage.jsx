@@ -48,12 +48,17 @@ const LoginPage = () => {
     }
     setLoginLoading(true);
     try {
-      await api.post('/auth/users/', registerForm);
+      const { confirmPassword, ...data } = registerForm;
+      await api.post('/auth/users/', data);
       toast.success('Account created! Please login.');
       setTab('login');
       navigate('/login');
     } catch (err) {
-      toast.error('Registration failed');
+      console.error('Registration Error:', err.response?.data);
+      const errorMsg = err.response?.data 
+        ? Object.values(err.response.data).flat()[0] 
+        : 'Registration failed';
+      toast.error(errorMsg);
     } finally { setLoginLoading(false); }
   };
 
